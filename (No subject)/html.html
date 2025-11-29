@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MC-Style Tiers (Clean Editable)</title>
+  <style>
+    @font-face {
+      font-family: 'Minecraft';
+      src: url('https://fonts.cdnfonts.com/s/20036/MinecraftTen-VGORe.woff') format('woff');
+      font-display: swap;
+    }
+
+    :root {
+      --bg-dark: #0e0e11;
+      --accent: #facc15;
+      --gold: #ffd700;
+      --card-bg: rgba(20,20,20,0.85);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Minecraft', Arial, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: url('https://i.imgur.com/7mF5H3j.png');
+      background-repeat: repeat;
+      background-size: 64px 64px;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+      color: white;
+    }
+
+    .container {
+      width: min(1000px, 96%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(8,8,10,0.7));
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px) saturate(120%);
+      position: relative;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 42px;
+      color: var(--gold);
+      text-shadow: 0 6px 18px rgba(0,0,0,0.8);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #bfc7b8;
+      margin-bottom: 20px;
+    }
+
+    .ranks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      border: 2px solid rgba(255,215,0,0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+
+    .card:hover { transform: translateY(-5px); box-shadow: 0 18px 32px rgba(255,215,0,0.6); }
+
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 3px solid rgba(255,215,0,0.6);
+    }
+
+    .left {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-width: 420px;
+    }
+
+    .name {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .rank-badge {
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .stat {
+      text-align: center;
+      width: 64px;
+    }
+
+    .stat img {
+      width: 50px;
+      height: 50px;
+      display: block;
+      margin: 0 auto 6px;
+      filter: drop-shadow(0 5px 7px rgba(0,0,0,0.7));
+      border-radius: 6px;
+    }
+
+    .stat p { margin: 0; font-weight: 700; font-size: 14px; color: var(--gold); }
+
+    .grandmaster .name { color: #ff6b6b; }
+    .grandmaster .rank-badge { background: linear-gradient(90deg,#ffd700,#ff4d4d); color:#210b0b; }
+    .master .name { color: #ffb347; }
+    .master .rank-badge { background: linear-gradient(90deg,#ffd700,#ff9a00); color:#3b2100; }
+    .pro .name { color: #7fe9ff; }
+    .pro .rank-badge { background: linear-gradient(90deg,#66e0ff,#00bfff); color:#002428; }
+    .rookie .name { color: #cfcfcf; }
+    .rookie .rank-badge { background: linear-gradient(90deg,#dddddd,#aaaaaa); color:#111; }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .overlay-content {
+      background: #1a1a1f;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .overlay-content img {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      object-fit: cover;
+      border: 3px solid rgba(255,215,0,0.6);
+    }
+
+    .overlay h2 { margin-bottom: 12px; color: var(--gold); }
+    .overlay p { font-size: 16px; line-height: 1.4; }
+    .close-overlay { margin-top: 18px; padding: 8px 12px; border-radius: 8px; border:none; cursor:pointer; font-weight:700; background:#ffd700; color:#000; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MC Tier - STEM SMP</h1>
+    <div class="subtitle">Combat leaderboard — click any player for playstyle overview</div>
+    <div class="ranks" id="tiers"></div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay-content">
+      <img id="overlayAvatar" src="">
+      <h2 id="overlayName"></h2>
+      <p id="overlayDesc"></p>
+      <button class="close-overlay" id="closeOverlay">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const tiers = document.getElementById('tiers');
+
+    const data = [
+      {name:'JaskiratS', rank:'grandmaster', avatar:'flame.png', stats:[{img:'vanilla.svg',label:'N/A'},{img:'pot.svg',label:'HT3'},{img:'mace.svg',label:'HT3'},{img:'sword.svg',label:'HT1'},{img:'axe.svg',label:'LT2'}], playstyle:'Aggressive melee with Mace and Sword (HT1), uses potions actively, explosives not prioritized.'},
+      {name:'EdwinP', rank:'master', avatar:'512.png', stats:[{img:'vanilla.svg',label:'N/A'},{img:'pot.svg',label:'HT3'},{img:'mace.svg',label:'LT3'},{img:'sword.svg',label:'HT2'},{img:'axe.svg',label:'LT3'}], playstyle:'Balanced PvP: Sword-focused, moderate Mace, good potion use, explosives not prioritized.'},
+      {name:'JacobN', rank:'pro', avatar:'steve.jpg', stats:[{img:'vanilla.svg',label:'HT2'},{img:'pot.svg',label:'N/A'},{img:'mace.svg',label:'N/A'},{img:'sword.svg',label:'LT2'},{img:'axe.svg',label:'LT3'}], playstyle:'Focuses on explosives (HT2), moderate Axe use, limited potions, prefers ranged burst and utility.'},
+      {name:'PranavD', rank:'pro', avatar:'steve.jpg', stats:[{img:'vanilla.svg',label:'N/A'},{img:'pot.svg',label:'N/A'},{img:'mace.svg',label:'N/A'},{img:'sword.svg',label:'HT2'},{img:'axe.svg',label:'HT2'}], playstyle:'Prioritizes HT2 Sword and HT2 Axe; potions not prioritized, explosives not prioritized.'},
+      {name:'Neil K', rank:'pro', avatar:'steve.jpg', stats:[{img:'vanilla.svg',label:'N/A'},{img:'pot.svg',label:'N/A'},{img:'mace.svg',label:'N/A'},{img:'sword.svg',label:'LT3'},{img:'axe.svg',label:'LT3'}], playstyle:'Balanced Pro: moderate Sword and Axe usage, potions not prioritized, explosives not prioritized.'},
+      {name:'AlK', rank:'rookie', avatar:'steve.jpg', stats:[{img:'vanilla.svg',label:'N/A'},{img:'pot.svg',label:'N/A'},{img:'mace.svg',label:'N/A'},{img:'sword.svg',label:'N/A'},{img:'axe.svg',label:'N/A'}], playstyle:'Rookie: Defensive, cautious, limited gear, avoids direct engagement.'}
+    ];
+
+    function render(){
+      tiers.innerHTML='';
+      data.forEach(player => {
+        const card = document.createElement('div');
+        card.className = `card ${player.rank}`;
+
+        const left = document.createElement('div'); left.className='left';
+        const avatar = document.createElement('img'); avatar.className='avatar'; avatar.src = player.avatar;
+        const nameDiv = document.createElement('div');
+        const nameEl = document.createElement('div'); nameEl.className='name'; nameEl.textContent = player.name;
+        const badge = document.createElement('span'); badge.className='rank-badge'; badge.textContent = player.rank.replace(/(^|\s)\S/g, s=>s.toUpperCase());
+        nameDiv.appendChild(nameEl); nameDiv.appendChild(badge);
+        left.appendChild(avatar); left.appendChild(nameDiv);
+
+        const stats = document.createElement('div'); stats.className='stats';
+        player.stats.forEach(s=>{
+          const st = document.createElement('div'); st.className='stat';
+          const img = document.createElement('img'); img.src=s.img;
+          const lab = document.createElement('p'); lab.textContent=s.label;
+          st.appendChild(img); st.appendChild(lab);
+          stats.appendChild(st);
+        });
+
+        card.appendChild(left); card.appendChild(stats);
+
+        card.addEventListener('click', ()=> openOverlay(player));
+        tiers.appendChild(card);
+      });
+    }
+
+    const overlay = document.getElementById('overlay');
+    const overlayName = document.getElementById('overlayName');
+    const overlayDesc = document.getElementById('overlayDesc');
+    const overlayAvatar = document.getElementById('overlayAvatar');
+    const closeOverlay = document.getElementById('closeOverlay');
+
+    function openOverlay(player){
+      overlayName.textContent = player.name + ' - ' + player.rank.replace(/(^|\s)\S/g, s=>s.toUpperCase());
+      overlayDesc.textContent = player.playstyle;
+      overlayAvatar.src = player.avatar;
+      overlay.style.display = 'flex';
+    }
+
+    closeOverlay.addEventListener('click', ()=> overlay.style.display='none');
+
+    render();
+  </script>
+</body>
+</html>
+
